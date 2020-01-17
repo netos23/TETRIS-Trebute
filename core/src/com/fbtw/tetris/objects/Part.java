@@ -1,9 +1,6 @@
 package com.fbtw.tetris.objects;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.fbtw.tetris.utils.TextureManager;
 
@@ -47,8 +44,9 @@ public  class Part {
         if(model.length!=model[0].length) throw new Exception("Invalid block format");
         this.n = model[0].length;
 
+        optimizeModel();
         updateBlocks();
-
+        setPosition(posX,posY);
 
     }
 
@@ -64,6 +62,9 @@ public  class Part {
     }
 
     public void setPosition(int x, int y){
+        //this.posX=x;
+        //this.posY=y;
+
         int dX, dY;
         for (Block block:blocks){
             dX = block.getPosX() - posX;
@@ -71,6 +72,8 @@ public  class Part {
 
             block.setPosition(x+dX, y+dY);
         }
+        posX=x;
+        posY=y;
     }
 
     public void move(int velocityX, int velocityY){
@@ -93,6 +96,7 @@ public  class Part {
                 }
 
             }
+
             optimizeModel();
             updateBlocks();
         }
@@ -113,6 +117,8 @@ public  class Part {
 
             if (flag) {
                 mergeDown++;
+            }else {
+                break;
             }
         }
 
@@ -125,13 +131,16 @@ public  class Part {
             }
             if (flag) {
                 mergeLeft++;
+            }else {
+                break;
             }
         }
 
-        if (mergeDown != 0 && mergeLeft != 0) {
-            for (int i = n - mergeDown; i >= 0; i--) {
+        if (mergeDown != 0 || mergeLeft != 0) {
+            for (int i = n - mergeDown-1; i >= 0; i--) {
                 for (int j = mergeLeft; j < n; j++) {
                     model[i+mergeDown][j-mergeLeft]=model[i][j];
+                    model[i][j]=0;
                 }
             }
         }
@@ -139,11 +148,23 @@ public  class Part {
 
     private void updateBlocks(){
         int count=0;
+        length=0;
+        heigth=0;
         for(int i = n - 1; i >= 0; i--){
             for(int j=0;j<n;j++){
                 if(model[i][j]==1){
-                    blocks[count].setPosition(posX+BLOCK_SIZE_X*j,posY+BLOCK_SIZE_Y*(n-i));
+                    int lengthMax = BLOCK_SIZE_X * j;
+                    int heigthMax = BLOCK_SIZE_Y * (n - i);
+                    blocks[count].setPosition(posX+ lengthMax,posY+ heigthMax);
+
                     count++;
+
+
+                    heigth = Math.max(heigth,heigthMax);
+                    length = Math.max(length,lengthMax);
+                    if(n==4&&length==90)length=120;
+
+
                 }
             }
         }
@@ -177,9 +198,27 @@ public  class Part {
         return new Part(modelCopy,x,y,isRotete);
     }
 
-    public void extractBlocks(){
-        //FIXME: поработать над алгоритмом экстракции блока и уничтожения части
+    public Block[] extractBlocks(){
+        return blocks;
     }
 
-    //todo : grid 10*20;
+    public int getPosX() {
+        return posX;
+    }
+
+    public int getPosY() {
+        return posY;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public int getHeigth() {
+        return heigth;
+    }
+
+    public int[][] getModel() {
+        return model;
+    }
 }
