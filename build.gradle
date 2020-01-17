@@ -38,6 +38,9 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
+
+
+
 }
 
 project(":desktop") {
@@ -92,6 +95,7 @@ project(":core") {
         
     }
 }
+
 
 tasks.eclipse.doLast {
     delete ".project"

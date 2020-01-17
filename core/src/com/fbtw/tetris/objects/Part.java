@@ -1,8 +1,15 @@
 package com.fbtw.tetris.objects;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.fbtw.tetris.utils.TextureManager;
 
+
+import static com.fbtw.tetris.MainGame.BLOCK_SIZE_X;
+import static com.fbtw.tetris.MainGame.BLOCK_SIZE_Y;
 
 
 public  class Part {
@@ -13,22 +20,36 @@ public  class Part {
     private int posX;
     private int posY;
 
+    private int length;
+    private int heigth;
+
 
     private Color colour;
     private boolean isRotete;
+    private int n;
 
-    public Part(int[][] model, int posX, int posY, boolean isRotete) {
+    public Part(int[][] model, int posX, int posY, boolean isRotete) throws Exception{
         this.model = model;
         this.posX = posX;
         this.posY = posY;
         this.colour = TextureManager.getRandomColor();
         this.isRotete = isRotete;
 
-        int n = splitModel();
-        blocks = new Block[n];
-        for (int i=0;i<n;i++){
+        length=0;
+        heigth=0;
+
+        int countBlocks = splitModel();
+        blocks = new Block[countBlocks];
+        for (int i=0;i<countBlocks;i++){
             blocks[i]= new Block(0,0,colour);
         }
+
+        if(model.length!=model[0].length) throw new Exception("Invalid block format");
+        this.n = model[0].length;
+
+        updateBlocks();
+
+
     }
 
 
@@ -42,9 +63,122 @@ public  class Part {
         return counter;
     }
 
+    public void setPosition(int x, int y){
+        int dX, dY;
+        for (Block block:blocks){
+            dX = block.getPosX() - posX;
+            dY = block.getPosY() - posY;
 
-    private void optimizeModel(){
+            block.setPosition(x+dX, y+dY);
+        }
+    }
 
+    public void move(int velocityX, int velocityY){
+        setPosition(velocityX+posX,velocityY+posY);
+    }
+
+    public  void rotate(){
+
+        if(isRotete) {
+            int[][] res = new int[n][n];
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    res[j][n - 1 - i] = model[i][j];
+                }
+            }
+
+            for (int i = 0; i < model[0].length; i++) {
+                for (int j = 0; j < model[0].length; j++) {
+                    model[i][j] = res[i][j];
+                }
+
+            }
+            optimizeModel();
+            updateBlocks();
+        }
+    }
+
+
+    private void optimizeModel() {
+        int mergeLeft = 0, mergeDown = 0;
+        boolean flag;
+
+        for (int i = n - 1; i >= 0; i--) {
+            flag = true;
+            for (int j = 0; j < n; j++) {
+                if (model[i][j] == 1) {
+                    flag = false;
+                }
+            }
+
+            if (flag) {
+                mergeDown++;
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            flag = true;
+            for (int j = 0; j < n; j++) {
+                if (model[j][i] == 1) {
+                    flag = false;
+                }
+            }
+            if (flag) {
+                mergeLeft++;
+            }
+        }
+
+        if (mergeDown != 0 && mergeLeft != 0) {
+            for (int i = n - mergeDown; i >= 0; i--) {
+                for (int j = mergeLeft; j < n; j++) {
+                    model[i+mergeDown][j-mergeLeft]=model[i][j];
+                }
+            }
+        }
+    }
+
+    private void updateBlocks(){
+        int count=0;
+        for(int i = n - 1; i >= 0; i--){
+            for(int j=0;j<n;j++){
+                if(model[i][j]==1){
+                    blocks[count].setPosition(posX+BLOCK_SIZE_X*j,posY+BLOCK_SIZE_Y*(n-i));
+                    count++;
+                }
+            }
+        }
+    }
+
+    public void render(SpriteBatch spriteBatch){
+        for(Block block : blocks){
+            block.render(spriteBatch);
+        }
+    }
+
+    //for debug
+    private  void print(int [][] model){
+        for(int i=0;i<model[0].length;i++){
+            for(int j=0;j<model[0].length;j++){
+                System.out.print(model[i][j]+" ");
+            }
+            System.out.println();
+        }
+    }
+
+    public Part clone(int x, int y) throws Exception {
+        int [][] modelCopy = new int[n][n];
+
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                modelCopy[i][j] = model[i][j];
+            }
+        }
+
+        return new Part(modelCopy,x,y,isRotete);
+    }
+
+    public void extractBlocks(){
+        //FIXME: поработать над алгоритмом экстракции блока и уничтожения части
     }
 
     //todo : grid 10*20;
