@@ -2,14 +2,12 @@ package com.fbtw.tetris.screans;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 
 
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.fbtw.tetris.objects.Part;
 import com.fbtw.tetris.utils.GameScreanManeger;
 import com.fbtw.tetris.utils.TextureManager;
 
@@ -17,14 +15,12 @@ public class GameScrean implements Screen {
     private Game game;
     private OrthographicCamera camera;
     private SpriteBatch batch;
-
     private GameScreanManeger maneger;
 
     public GameScrean(Game game) {
         super();
         this.game = game;
         TextureManager.init();
-
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
 
@@ -60,7 +56,7 @@ public class GameScrean implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        camera.setToOrtho(false,width,height);
     }
 
     @Override

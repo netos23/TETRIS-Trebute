@@ -22,16 +22,18 @@ public class GameScreanManeger {
     private Block[][] grid;
     private int grid_size_x = 10;
     private int grid_size_y = 20;
-    private int [] ground;
-    private boolean isGameOver, isInDestraction;
+    private int[] ground;
+    private boolean isGameOver, isInDestraction, isUpdatePart, isInspectd;
 
     private PrefabLoader loader;
 
 
     private int speed = 1;
     private int timeCycle = 20;
+    private int superTimeCycle = 1;
+    private int defaultTimeCycle = 20;
     private int curTime = 0;
-    private int score=0;
+    private int score = 0;
 
     private Random random;
 
@@ -47,8 +49,9 @@ public class GameScreanManeger {
 
         grid = new Block[grid_size_y][grid_size_x];
         ground = new int[grid_size_x];
-        Arrays.fill(ground,0);
+        Arrays.fill(ground, 0);
         isInDestraction = false;
+        isUpdatePart = false;
 
         queue = new LinkedList<Part>();
         updateActivePart();
@@ -56,87 +59,202 @@ public class GameScreanManeger {
     }
 
     public void update(float dt) {
-        if(!isGameOver||!isInDestraction) {
+        if (!isGameOver || !isInDestraction) {
             curTime += speed;
-            if (curTime >= timeCycle) {
-                activePart.move(0, -BLOCK_SIZE_Y);
-                updateGrid();
-                curTime = 0;
-            }
             handleInput();
+            if (curTime >= timeCycle) {
+
+
+                isUpdatePart = isOverlapsModel(activePart.getColumn(),
+                        activePart.getModel(),
+                        activePart.getLength()) == 1;
+
+                if(isUpdatePart){
+
+                    importGrid();
+                    inspectGrid();
+                    updateActivePart();
+
+
+                }else {
+                    activePart.move(0, -BLOCK_SIZE_Y);
+                }
+
+                curTime = 0;
+                isInspectd=false;
+            }
+
         }
     }
 
     private void handleInput() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            activePart.rotate();
-            if(activePart.getPosX()+activePart.getLength()> (grid_size_x-1)*BLOCK_SIZE_X){
-               // activePart.move(grid_size_x*BLOCK_SIZE_X-(activePart.getPosX()+activePart.getLength()),0);
-                activePart.move(BLOCK_SIZE_X-activePart.getLength(),0);
+        int length = activePart.getLength();
+        if(!isUpdatePart) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+                isInspectd = true;
 
-            }
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            if(activePart.getPosX()>=BLOCK_SIZE_X){
-                activePart.move(-BLOCK_SIZE_X, 0);
-            }
-
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            if(activePart.getPosX()+activePart.getLength()<BLOCK_SIZE_X*(grid_size_x-1)) {
-                activePart.move(BLOCK_SIZE_X, 0);
-            }
-        }
-
-
-    }
-
-    private void updateGrid() {
-        int [][] hitBox = activePart.getModel();
-
-        int columnStart = activePart.getPosX()/BLOCK_SIZE_X;
-        int currentY = activePart.getPosY()/BLOCK_SIZE_Y;
-
-        int n = hitBox[0].length;
-
-        for(int i = n - 1; i >= 0; i--){
-            if(isInDestraction||isGameOver) {
-                break;
-            }
-            for (int j=0;j<n;j++){
-                if(hitBox[i][j]==1){
-                    int maxY = currentY + (n - i - 1) + 1;
-
-                    if(maxY ==ground[columnStart+j]){
-                        if(maxY>grid_size_y){
-                            isGameOver=true;
-                            break;
-                            //fixme : правильное определение луза
-                        }
-                        isInDestraction=true;
+                int[][] newModel = activePart.rotate();
+                int newX;
+                length = activePart.getLength();
+                if (length + activePart.getColumn() < grid_size_x) {
+                    newX = activePart.getColumn();
+                } else {
+                    newX = grid_size_x - length - 1;
+                }
+                switch (isOverlapsModel(newX, newModel, length)) {
+                    case -1:
                         break;
+                    case 0:
+                        activePart.apply(newModel);
+                        activePart.setPosition(newX * BLOCK_SIZE_X, activePart.getPosY());
+
+                        break;
+                    case 1:
+                        activePart.apply(newModel);
+                        isUpdatePart = true;
+                        activePart.setPosition(newX * BLOCK_SIZE_X, activePart.getPosY());
+
+                        break;
+                    default:
+                }
+
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+                length = activePart.getLength();
+                isInspectd = true;
+                if (activePart.getColumn() > 0) {
+
+                    isInspectd = true;
+                    int newX = activePart.getColumn() - 1;
+                    switch (isOverlapsModel(newX, activePart.getModel(), length)) {
+                        case -1:
+                            break;
+                        case 0:
+                            activePart.move(-BLOCK_SIZE_X, 0);
+                            break;
+                        case 1:
+                            activePart.move(-BLOCK_SIZE_X, 0);
+                            isUpdatePart = true;
+                            break;
+
+                    }
+                }
+
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+                isInspectd = true;
+                length = activePart.getLength();
+                if (length + activePart.getColumn() < grid_size_x - 1) {
+                    int newX = activePart.getColumn() + 1;
+                    int overlapsModel = isOverlapsModel(newX, activePart.getModel(), length);
+
+                    switch (overlapsModel) {
+                        case -1:
+                            break;
+                        case 0:
+                            activePart.move(BLOCK_SIZE_X, 0);
+                            break;
+                        case 1:
+                            activePart.move(BLOCK_SIZE_X, 0);
+                            isUpdatePart = true;
+                            break;
+
                     }
                 }
             }
-        }
-        if(isInDestraction){
-            importGrid();
-            activePart=null;
-            updateActivePart();
-            isInDestraction = false;
-            inspectGrid();
+
+            if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+                timeCycle = superTimeCycle;
+            }else{
+                timeCycle = defaultTimeCycle;
+            }
+
         }
     }
 
+
     private void updateActivePart() {
-        if(queue.size()<2){
+        if (queue.size() < 2) {
             queue.add(generetePart());
             queue.add(generetePart());
         }
         activePart = queue.poll();
     }
 
-    private void inspectGrid(){
+    private int isOverlapsModel(int x, int[][] model, int len) {
+
+        int result = 0;
+        int  offsetY = activePart.getRow();
+        if(offsetY==0){
+            result = 1;
+        }
+            int minH = activePart.getRow() + activePart.getHeigth();
+            if (minH > grid_size_y - 1) {
+                minH = grid_size_y - 1;
+            }
+        //debugPrint(x, model, len, offsetY, minH);
+        boolean flag = false;
+
+            int n = model.length;
+            for(int i = n-1; i>-1; i--){
+                for(int j=0;j<n;j++){
+                    if(model[i][j]==1) {
+                        int indexX = x + j;
+                        int indexY = activePart.getRow() + (n-1-i);
+
+                        if(indexX<grid_size_x){
+                            if(indexY<grid_size_y){
+                                if(grid[indexY][indexX]!=null){
+                                    result = -1;
+                                    return result;
+                                }
+                                if(indexY>0){
+                                    if(grid[indexY-1][indexX]!=null){
+                                        result=1;
+                                    }
+                                }
+                            }
+                        }else {
+                            result = -1;
+                            return result;
+                        }
+                    }
+                }
+            }
+
+        return result;
+    }
+
+    private void debugPrint(int x, int[][] model, int len, int offsetY, int minH) {
+        System.out.println("________");
+        char cym=0;
+        for(int i = 0; i < grid_size_y; i++){
+            for(int j=0;j<grid_size_x;j++){
+                if(j>=x&&j <= x + len&&i>=offsetY&&i<=minH){
+                    if (model[(i - offsetY)][j - x] == 1){
+                        if (grid[i][j] != null) {
+                            cym='@';
+                        }else{
+                            cym='*';
+                        }
+                    }else{
+                        cym='-';
+                    }
+                }else{
+                    if (grid[i][j] != null) {
+                        cym='#';
+                    }else{
+                        cym='-';
+                    }
+                }
+                System.out.print(cym);
+            }
+            System.out.println();
+        }
+        System.out.println("________");
+    }
+
+    private void inspectGrid() {
         boolean flag;
         for(int i=grid_size_y-1;i>=0;i--){
             flag=true;
@@ -167,12 +285,12 @@ public class GameScreanManeger {
         }
     }
 
-    public void importGrid() {
+    private void importGrid() {
         for (Block block : activePart.extractBlocks()) {
             int y = block.getPosY() / BLOCK_SIZE_Y;
             int x = block.getPosX() / BLOCK_SIZE_X;
             grid[y][x] = block;
-            ground[x] = Math.max(ground[x],y+1);
+            ground[x] = Math.max(ground[x], y + 1);
         }
     }
 
@@ -180,7 +298,7 @@ public class GameScreanManeger {
     private Part generetePart() {
 
         try {
-            return prefabs[random.nextInt(prefabs.length)].clone(150,600);
+            return prefabs[random.nextInt(prefabs.length)].clone(150, 600);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -197,7 +315,6 @@ public class GameScreanManeger {
             }
         }
     }
-
 
 
 
