@@ -44,10 +44,22 @@ public  class Part {
         if(model.length!=model[0].length) throw new Exception("Invalid block format");
         this.n = model[0].length;
 
-        optimizeModel();
+        if(optimizeModel(model)){
+            for(int i=0;i<n;i++){
+                for(int j=0;j<n;j++){
+                    if(model[i][j]==1){
+                        if(n-1-i>heigth){
+                            heigth=n-1-i;
+                        }
+                        if(j>length){
+                            length=j;
+                        }
+                    }
+                }
+            }
+        }
         updateBlocks();
         setPosition(posX,posY);
-
     }
 
 
@@ -62,8 +74,6 @@ public  class Part {
     }
 
     public void setPosition(int x, int y){
-        //this.posX=x;
-        //this.posY=y;
 
         int dX, dY;
         for (Block block:blocks){
@@ -80,32 +90,50 @@ public  class Part {
         setPosition(velocityX+posX,velocityY+posY);
     }
 
-    public  void rotate(){
+    public  int [][] rotate(){
 
         if(isRotete) {
+            length=0;
+            heigth=0;
             int[][] res = new int[n][n];
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
                     res[j][n - 1 - i] = model[i][j];
+                    if(res[j][n - 1 - i]==1){
+                        if(n-1-j>heigth){
+                            heigth=n-1-j;
+                        }
+                        if(n - 1 - i>length){
+                            length = n - 1 - i;
+                        }
+                    }
                 }
             }
 
-            for (int i = 0; i < model[0].length; i++) {
-                for (int j = 0; j < model[0].length; j++) {
-                    model[i][j] = res[i][j];
-                }
 
-            }
 
-            optimizeModel();
-            updateBlocks();
+            optimizeModel(res);
+            return res;
+        }else{
+            return model;
         }
     }
 
+    public void apply(int[][] res) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                model[i][j] = res[i][j];
 
-    private void optimizeModel() {
+            }
+
+        }
+        updateBlocks();
+    }
+
+
+    private boolean optimizeModel(int [][] model) {
         int mergeLeft = 0, mergeDown = 0;
-        boolean flag;
+        boolean flag, result = true;
 
         for (int i = n - 1; i >= 0; i--) {
             flag = true;
@@ -117,6 +145,7 @@ public  class Part {
 
             if (flag) {
                 mergeDown++;
+                result=false;
             }else {
                 break;
             }
@@ -131,6 +160,7 @@ public  class Part {
             }
             if (flag) {
                 mergeLeft++;
+                result=false;
             }else {
                 break;
             }
@@ -141,30 +171,33 @@ public  class Part {
                 for (int j = mergeLeft; j < n; j++) {
                     model[i+mergeDown][j-mergeLeft]=model[i][j];
                     model[i][j]=0;
+
+                    if(model[i+mergeDown][j-mergeLeft]==1){
+                        if(n-1-(i+mergeDown)>heigth){
+                            heigth=n-1-j;
+                        }
+                        if(n - 1 - (j-mergeLeft)>length){
+                            length = n - 1 - i;
+                        }
+                    }
+
                 }
             }
         }
+        return result;
     }
 
     private void updateBlocks(){
         int count=0;
-        length=0;
-        heigth=0;
+
         for(int i = n - 1; i >= 0; i--){
             for(int j=0;j<n;j++){
                 if(model[i][j]==1){
                     int lengthMax = BLOCK_SIZE_X * j;
-                    int heigthMax = BLOCK_SIZE_Y * (n - i);
+                    int heigthMax = BLOCK_SIZE_Y * (n-1 - i);
                     blocks[count].setPosition(posX+ lengthMax,posY+ heigthMax);
 
                     count++;
-
-
-                    heigth = Math.max(heigth,heigthMax);
-                    length = Math.max(length,lengthMax);
-                    if(n==4&&length==90)length=120;
-
-
                 }
             }
         }
@@ -208,6 +241,14 @@ public  class Part {
 
     public int getPosY() {
         return posY;
+    }
+
+    public int getColumn() {
+        return posX/BLOCK_SIZE_X;
+    }
+
+    public int getRow() {
+        return posY/BLOCK_SIZE_Y;
     }
 
     public int getLength() {
