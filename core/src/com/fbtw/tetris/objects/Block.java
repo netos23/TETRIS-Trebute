@@ -40,6 +40,9 @@ public class Block {
         blockSprite.setPosition(x,y);
     }
 
+    public void resize(int w, int h){
+        blockSprite.setSize(w,h);
+    }
 
     public void render(SpriteBatch sb){
         blockSprite.draw(sb);

@@ -5,9 +5,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.fbtw.tetris.MainGame;
 import com.fbtw.tetris.utils.GameScreanManeger;
 import com.fbtw.tetris.utils.TextureManager;
 
@@ -16,6 +19,8 @@ public class GameScrean implements Screen {
     private OrthographicCamera camera;
     private SpriteBatch batch;
     private GameScreanManeger maneger;
+    private Sprite background;
+    private Sprite gameBackground;
 
     public GameScrean(Game game) {
         super();
@@ -24,11 +29,15 @@ public class GameScrean implements Screen {
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
 
-        camera.setToOrtho(false,300,600);
-
+        camera.setToOrtho(false,MainGame.SCREAN_SIZE_X,MainGame.SCREAN_SIZE_Y);
         maneger = new GameScreanManeger();
 
+        background = new Sprite(TextureManager.blockTexture);
+        background.setSize(MainGame.BLOCK_SIZE_X*maneger.getGrid_size_x(),MainGame.BLOCK_SIZE_Y*maneger.getGrid_size_y());
+        background.setColor(Color.BLACK);
 
+        gameBackground = new Sprite(TextureManager.background);
+        gameBackground.setSize(MainGame.SCREAN_SIZE_X,MainGame.SCREAN_SIZE_Y);
     }
 
     @Override
@@ -38,13 +47,15 @@ public class GameScrean implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl20.glClearColor(0,0,0,0);
+        Gdx.gl20.glClearColor(0,0,1,0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(camera.combined);
 
         update(delta);
 
         batch.begin();
+        gameBackground.draw(batch);
+        background.draw(batch);
         maneger.render(batch);
         batch.end();
     }
@@ -56,7 +67,31 @@ public class GameScrean implements Screen {
 
     @Override
     public void resize(int width, int height) {
+
+        if(width<MainGame.BLOCK_SIZE_X*maneger.getGrid_size_x()){
+            Gdx.graphics.setWindowedMode(MainGame.BLOCK_SIZE_X * maneger.getGrid_size_x(),
+                    MainGame.BLOCK_SIZE_Y*maneger.getGrid_size_y());
+
+        }else{
+            if(height<MainGame.BLOCK_SIZE_Y*maneger.getGrid_size_y()){
+                Gdx.graphics.setWindowedMode(width,
+                        MainGame.BLOCK_SIZE_Y*maneger.getGrid_size_y());
+            }
+        }
+
         camera.setToOrtho(false,width,height);
+
+        int x = (width - MainGame.BLOCK_SIZE_X * maneger.getGrid_size_x())/2;
+        int y =MainGame.BLOCK_SIZE_Y * maneger.getGrid_size_y()/2
+                -(height-MainGame.BLOCK_SIZE_Y * maneger.getGrid_size_y())/2;
+        gameBackground.setSize(width,height);
+        gameBackground.setPosition(-x,-(height-MainGame.BLOCK_SIZE_Y * maneger.getGrid_size_y()) );
+
+        camera.position.x = MainGame.BLOCK_SIZE_X*maneger.getGrid_size_x()/2;
+
+        camera.position.y = y;
+        camera.update();
+
     }
 
     @Override

@@ -231,6 +231,15 @@ public  class Part {
         return new Part(modelCopy,x,y,isRotete);
     }
 
+    public void resize(int w,int h){
+
+        for (Block block:blocks){
+            block.resize(w,h);
+        }
+        updateBlocks();
+
+    }
+
     public Block[] extractBlocks(){
         return blocks;
     }

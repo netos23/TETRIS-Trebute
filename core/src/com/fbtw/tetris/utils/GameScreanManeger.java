@@ -13,6 +13,8 @@ import java.util.Random;
 
 import static com.fbtw.tetris.MainGame.BLOCK_SIZE_X;
 import static com.fbtw.tetris.MainGame.BLOCK_SIZE_Y;
+import static com.fbtw.tetris.MainGame.SCREAN_SIZE_X;
+import static com.fbtw.tetris.MainGame.SCREAN_SIZE_Y;
 
 public class GameScreanManeger {
     private Part[] prefabs;
@@ -40,7 +42,6 @@ public class GameScreanManeger {
     public GameScreanManeger() {
         random = new Random();
         loader = new PrefabLoader("prefabs.txt");
-
         try {
             prefabs = loader.getPrefabs();
         } catch (Exception e) {
@@ -50,16 +51,16 @@ public class GameScreanManeger {
         grid = new Block[grid_size_y][grid_size_x];
         ground = new int[grid_size_x];
         Arrays.fill(ground, 0);
-        isInDestraction = false;
+
         isUpdatePart = false;
 
         queue = new LinkedList<Part>();
         updateActivePart();
-        activePart.setPosition(150, 600);
+        activePart.setPosition(SCREAN_SIZE_X/2, SCREAN_SIZE_Y);
     }
 
     public void update(float dt) {
-        if (!isGameOver || !isInDestraction) {
+        if (!isGameOver ) {
             curTime += speed;
             handleInput();
             if (curTime >= timeCycle) {
@@ -84,6 +85,8 @@ public class GameScreanManeger {
                 isInspectd=false;
             }
 
+        }else{
+            System.out.println("game over");
         }
     }
 
@@ -188,12 +191,14 @@ public class GameScreanManeger {
         if(offsetY==0){
             result = 1;
         }
+        boolean flag = false;
             int minH = activePart.getRow() + activePart.getHeigth();
             if (minH > grid_size_y - 1) {
                 minH = grid_size_y - 1;
+                flag = true;
             }
-        //debugPrint(x, model, len, offsetY, minH);
-        boolean flag = false;
+
+
 
             int n = model.length;
             for(int i = n-1; i>-1; i--){
@@ -211,11 +216,24 @@ public class GameScreanManeger {
                                 if(indexY>0){
                                     if(grid[indexY-1][indexX]!=null){
                                         result=1;
+                                        if(flag) {
+                                            isGameOver = true;
+                                        }
+                                    }
+                                }
+                            }else{
+                                if(indexY-1<grid_size_y){
+                                    if(grid[indexY-1][indexX]!=null){
+                                        result=1;
+                                        if(flag) {
+                                            isGameOver = true;
+                                        }
                                     }
                                 }
                             }
                         }else {
                             result = -1;
+
                             return result;
                         }
                     }
@@ -286,11 +304,24 @@ public class GameScreanManeger {
     }
 
     private void importGrid() {
-        for (Block block : activePart.extractBlocks()) {
-            int y = block.getPosY() / BLOCK_SIZE_Y;
-            int x = block.getPosX() / BLOCK_SIZE_X;
-            grid[y][x] = block;
-            ground[x] = Math.max(ground[x], y + 1);
+        if(!isGameOver) {
+            for (Block block : activePart.extractBlocks()) {
+                int y = block.getPosY() / BLOCK_SIZE_Y;
+                int x = block.getPosX() / BLOCK_SIZE_X;
+                grid[y][x] = block;
+                ground[x] = Math.max(ground[x], y + 1);
+            }
+        }
+    }
+
+    public void resize(int w,int h){
+        activePart.resize(w,h);
+        for (int i=0;i<grid_size_y;i++) {
+            for (int j=0;j<grid_size_x;j++){
+                if(grid[i][j]!=null){
+                    grid[i][j].resize(w,h);
+                }
+            }
         }
     }
 
@@ -298,7 +329,7 @@ public class GameScreanManeger {
     private Part generetePart() {
 
         try {
-            return prefabs[random.nextInt(prefabs.length)].clone(150, 600);
+            return prefabs[random.nextInt(prefabs.length)].clone(SCREAN_SIZE_X/2, SCREAN_SIZE_Y);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -316,7 +347,11 @@ public class GameScreanManeger {
         }
     }
 
+    public int getGrid_size_x() {
+        return grid_size_x;
+    }
 
-
-
+    public int getGrid_size_y() {
+        return grid_size_y;
+    }
 }
