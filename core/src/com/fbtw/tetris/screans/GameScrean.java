@@ -67,9 +67,9 @@ public class GameScrean implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
-        if(width<MainGame.BLOCK_SIZE_X*maneger.getGrid_size_x()){
-            Gdx.graphics.setWindowedMode(MainGame.BLOCK_SIZE_X * maneger.getGrid_size_x(),
+        int offsetX =  100;
+        if(width<MainGame.BLOCK_SIZE_X*maneger.getGrid_size_x()+offsetX){
+            Gdx.graphics.setWindowedMode(MainGame.BLOCK_SIZE_X * maneger.getGrid_size_x()+offsetX,
                     MainGame.BLOCK_SIZE_Y*maneger.getGrid_size_y());
 
         }else{
@@ -79,17 +79,22 @@ public class GameScrean implements Screen {
             }
         }
 
+
+        float zooom =   (1.0f* MainGame.BLOCK_SIZE_Y * maneger.getGrid_size_y())/(1.0f*height);
+       // width = (int)(width*zooom);
         camera.setToOrtho(false,width,height);
 
-        int x = (width - MainGame.BLOCK_SIZE_X * maneger.getGrid_size_x())/2;
-        int y =MainGame.BLOCK_SIZE_Y * maneger.getGrid_size_y()/2
-                -(height-MainGame.BLOCK_SIZE_Y * maneger.getGrid_size_y())/2;
+
+        int x = (width - MainGame.BLOCK_SIZE_X * maneger.getGrid_size_x())/2-offsetX;
+        float y =(MainGame.BLOCK_SIZE_Y * maneger.getGrid_size_y()
+                -(height)/2f);
         gameBackground.setSize(width,height);
         gameBackground.setPosition(-x,-(height-MainGame.BLOCK_SIZE_Y * maneger.getGrid_size_y()) );
 
-        camera.position.x = MainGame.BLOCK_SIZE_X*maneger.getGrid_size_x()/2;
 
-        camera.position.y = y;
+        camera.position.x = MainGame.BLOCK_SIZE_X*maneger.getGrid_size_x()/2+offsetX;
+        camera.zoom = zooom;
+        camera.position.y = y/zooom;
         camera.update();
 
     }

@@ -7,10 +7,10 @@ import com.fbtw.tetris.screans.GameScrean;
 
 
 public class MainGame extends Game {
-public static  int BLOCK_SIZE_X = 45;
-public static  int BLOCK_SIZE_Y = 45;
-public static  int SCREAN_SIZE_X = 450;
-public static  int SCREAN_SIZE_Y = 900;
+public static  int BLOCK_SIZE_X = 50;
+public static  int BLOCK_SIZE_Y = 50;
+public static  int SCREAN_SIZE_X = 500;
+public static  int SCREAN_SIZE_Y = 1000;
 
 	public MainGame(int X,int Y) {
 		SCREAN_SIZE_X = X;
