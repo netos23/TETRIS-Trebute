@@ -27,6 +27,8 @@ public class GameScreanManeger {
     private int[] ground;
     private boolean isGameOver, isInDestraction, isUpdatePart, isInspectd;
 
+    private UIManager uiManager;
+
     private PrefabLoader loader;
 
 
@@ -39,7 +41,8 @@ public class GameScreanManeger {
 
     private Random random;
 
-    public GameScreanManeger() {
+    public GameScreanManeger(int speed) {
+        this.speed = speed;
         random = new Random();
         loader = new PrefabLoader("prefabs.txt");
         try {
@@ -57,6 +60,9 @@ public class GameScreanManeger {
         queue = new LinkedList<Part>();
         updateActivePart();
         activePart.setPosition(SCREAN_SIZE_X/2, SCREAN_SIZE_Y);
+
+        timeCycle-=speed+1;
+        defaultTimeCycle=timeCycle;
     }
 
     public void update(float dt) {
@@ -75,7 +81,7 @@ public class GameScreanManeger {
                     importGrid();
                     inspectGrid();
                     updateActivePart();
-
+                    uiManager.getScore().setNextPart(queue.peek());
 
                 }else {
                     activePart.move(0, -BLOCK_SIZE_Y);
@@ -184,6 +190,8 @@ public class GameScreanManeger {
         activePart = queue.poll();
     }
 
+
+
     private int isOverlapsModel(int x, int[][] model, int len) {
 
         int result = 0;
@@ -283,6 +291,7 @@ public class GameScreanManeger {
             }
             if(flag){
                 score+=100;
+                uiManager.getScore().setScore(score);
                 for(int k=i;k<grid_size_y;k++){
                     for(int j=0;j<grid_size_x;j++){
                         if(k==i){
@@ -353,5 +362,15 @@ public class GameScreanManeger {
 
     public int getGrid_size_y() {
         return grid_size_y;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setUiManager(UIManager uiManager) {
+        this.uiManager = uiManager;
+        uiManager.getScore().setScore(score);
+        uiManager.getScore().setNextPart(queue.peek());
     }
 }
