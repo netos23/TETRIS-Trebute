@@ -1,8 +1,6 @@
 package com.fbtw.tetris.screans;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 
 
 import com.badlogic.gdx.graphics.Color;
@@ -17,6 +15,7 @@ import com.fbtw.tetris.utils.TextureManager;
 import com.fbtw.tetris.utils.UIManager;
 
 public class GameScrean implements Screen {
+    private boolean isFullscrean;
     private Game game;
     private OrthographicCamera camera;
     private SpriteBatch batch;
@@ -27,6 +26,8 @@ public class GameScrean implements Screen {
     private UIManager uiManager;
 
     private int speed;
+
+    private boolean isPause;
 
     public GameScrean(Game game,int speed) {
         super();
@@ -53,6 +54,10 @@ public class GameScrean implements Screen {
         uiManager.getScore().setPosition(MainGame.BLOCK_SIZE_X*(maneger.getGrid_size_x()+1), (int) (camera.viewportHeight/2-150));
         uiManager.getScore().setBackGround(TextureManager.blockTexture,Color.WHITE);
         uiManager.getScore().setSpeed(speed);
+
+        isPause = false;
+
+        isFullscrean = Gdx.graphics.isFullscreen();
     }
 
     @Override
@@ -78,13 +83,11 @@ public class GameScrean implements Screen {
     }
 
     public void update(float delta){
-        maneger.update(delta);
-        /*ui.setNextPart(maneger.getNextPart());
-        int score = maneger.getScore();
-        ui.setScore(score);
-        if(score>200){
-            ui.setHI();
-        }*/
+        if(!isPause) {
+            maneger.update(delta);
+        }
+
+        hendleInput();
     }
 
 
@@ -123,21 +126,47 @@ public class GameScrean implements Screen {
 
     @Override
     public void pause() {
-
+        isPause = true;
+        uiManager.getScore().setPause(true);
     }
 
     @Override
     public void resume() {
-
+        isPause = false;
+        uiManager.getScore().setPause(false);
     }
 
     @Override
     public void hide() {
-
+        pause();
     }
 
     @Override
     public void dispose() {
         TextureManager.dispose();
+    }
+
+    private void hendleInput(){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            if(!isPause){
+                pause();
+            }else {
+                resume();
+            }
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            Gdx.app.exit();
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.F9)){
+            isFullscrean=!isFullscrean;
+
+            if(isFullscrean) {
+                Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+            }else{
+                Gdx.graphics.setWindowedMode(MainGame.SCREAN_SIZE_X,MainGame.SCREAN_SIZE_Y);
+            }
+        }
+
     }
 }

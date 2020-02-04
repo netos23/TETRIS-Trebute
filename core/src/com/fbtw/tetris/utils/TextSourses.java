@@ -5,6 +5,7 @@ public class TextSourses {
     public static final String HI_NAME = "HI";
     public static final String SCORE_NAME = "SCORE";
     public static final String SPEED_NAME = "SPEED";
+    public static final String PAUSE_TEXT = "PAUSE";
 
 
 }
