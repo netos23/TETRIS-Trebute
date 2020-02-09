@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
 import com.fbtw.tetris.MainGame;
+import com.fbtw.tetris.utils.PlatformsVariants;
 
 public class HtmlLauncher extends GwtApplication {
 
@@ -46,6 +47,6 @@ public class HtmlLauncher extends GwtApplication {
 
         @Override
         public ApplicationListener createApplicationListener () {
-                return new MainGame();
+                return new MainGame(300,600, PlatformsVariants.HTML);
         }
 }
