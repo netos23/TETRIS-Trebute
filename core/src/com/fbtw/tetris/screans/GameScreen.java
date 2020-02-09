@@ -9,12 +9,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.fbtw.tetris.MainGame;
-import com.fbtw.tetris.ui.ScoreUI;
 import com.fbtw.tetris.utils.GameScreanManeger;
+import com.fbtw.tetris.utils.HighScoreManager;
 import com.fbtw.tetris.utils.TextureManager;
 import com.fbtw.tetris.utils.UIManager;
 
-public class GameScrean implements Screen {
+public class GameScreen implements Screen {
     private boolean isFullscrean;
     private Game game;
     private OrthographicCamera camera;
@@ -29,8 +29,10 @@ public class GameScrean implements Screen {
 
     private boolean isPause;
 
-    public GameScrean(Game game,int speed) {
+    public GameScreen(Game game, int speed) {
         super();
+        HighScoreManager.initHigthScoreManager();
+        HighScoreManager.loadScores();
         this.game = game;
         this.speed = speed;
         TextureManager.init();
@@ -84,7 +86,10 @@ public class GameScrean implements Screen {
 
     public void update(float delta){
         if(!isPause) {
-            maneger.update(delta);
+            if(maneger.update(delta)){
+
+                game.setScreen(new GameOverScreen(maneger.getScore()));
+            }
         }
 
         hendleInput();

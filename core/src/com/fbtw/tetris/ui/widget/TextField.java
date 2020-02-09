@@ -1,12 +1,19 @@
-package com.fbtw.tetris.ui;
+package com.fbtw.tetris.ui.widget;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Align;
+import com.fbtw.tetris.ui.Disengageable;
 
-public class TextField implements Disengageable{
-    private BitmapFont text;
+
+public class TextField implements Disengageable {
+    //private BitmapFont text;
+    private Label text;
 
     private String textString;
 
@@ -16,13 +23,12 @@ public class TextField implements Disengageable{
     private int localX;
     private int localY;
 
-    private int width;
-    private int hegth;
-
 
     private Color color;
 
     private boolean isEneble;
+
+    private Align align;
 
 
     public TextField(String textString, int x, int localX, int y, int localY) {
@@ -31,27 +37,30 @@ public class TextField implements Disengageable{
         this.y = y;
         this.localX = localX;
         this.localY = localY;
-        this.width = width;
-        this.hegth = hegth;
 
-        this.text = new BitmapFont();
+
+        Skin skin = new Skin(Gdx.files.internal("font/skin.json"));
+        //todo: системные разделители
+        text = new Label(textString,skin.get("default", Label.LabelStyle.class));
+
+        text.setColor(Color.BLACK);
+        text.setFontScale(0.5f);
 
         isEneble = true;
     }
 
     public void render(SpriteBatch batch){
         if(isEneble) {
-            text.draw(batch, textString, x+localX, y+localY, width, 1, false);
+            text.setPosition(x+localX, y+localY);
+            text.draw(batch,100);
+           // text.draw(batch, textString, x+localX, y+localY, width, 1, false);
         }
     }
 
-    public BitmapFont getText() {
-        return text;
+    public void setAlign(int algin) {
+        text.setAlignment(algin);
     }
 
-    public void setText(BitmapFont text) {
-        this.text = text;
-    }
 
     public String getTextString() {
         return textString;
@@ -59,6 +68,7 @@ public class TextField implements Disengageable{
 
     public void setTextString(String textString) {
         this.textString = textString;
+        text.setText(textString);
     }
 
     public int getX() {
@@ -77,21 +87,6 @@ public class TextField implements Disengageable{
         this.y = y;
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHegth() {
-        return hegth;
-    }
-
-    public void setHegth(int hegth) {
-        this.hegth = hegth;
-    }
 
 
     public Color getColor() {

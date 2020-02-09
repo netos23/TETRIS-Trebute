@@ -51,7 +51,11 @@ public  class HighScoreManager {
 
 			}
 
-		}catch (IOException | ClassNotFoundException ex){
+		} catch (IOException ex){
+			ex.printStackTrace();
+			scoresTable = new ArrayList<>();
+			registred=0;
+		} catch (ClassNotFoundException ex){
 			ex.printStackTrace();
 		}
 	}
@@ -120,7 +124,12 @@ public  class HighScoreManager {
 
 
 	public static int getHigh(){
-		return scoresTable.get(registred-1).getScore();
+		if(scoresTable.size()>0){
+			return scoresTable.get(registred-1).getScore();
+		}else {
+			return 0;
+		}
+
 	}
 
 	public static boolean isInit(){

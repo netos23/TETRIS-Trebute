@@ -65,7 +65,7 @@ public class GameScreanManeger {
         defaultTimeCycle=timeCycle;
     }
 
-    public void update(float dt) {
+    public boolean update(float dt) {
         if (!isGameOver ) {
             curTime += speed;
             handleInput();
@@ -91,9 +91,8 @@ public class GameScreanManeger {
                 isInspectd=false;
             }
 
-        }else{
-            System.out.println("game over");
         }
+        return isGameOver;
     }
 
     private void handleInput() {

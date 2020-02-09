@@ -33,8 +33,12 @@ public class HigthScore  implements Serializable,Comparable<HigthScore> {
 	@Override
 	public int compareTo(HigthScore o) {
 
-		//return (score-o.score>=0)? 1:-1;
+
 		return score-o.score;
 	}
 
+	@Override
+	public String toString() {
+		return name+" "+score;
+	}
 }

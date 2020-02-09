@@ -4,8 +4,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Align;
 import com.fbtw.tetris.MainGame;
 import com.fbtw.tetris.objects.Part;
+import com.fbtw.tetris.ui.widget.TextField;
+import com.fbtw.tetris.utils.HighScoreManager;
 import com.fbtw.tetris.utils.TextSourses;
 
 public class ScoreUI extends UI {
@@ -27,45 +30,47 @@ public class ScoreUI extends UI {
 	private TextField speedText;
 	private TextField pauseIndicator;
 	private int nextPartPadding;
+	private int hiScore;
 
 	public ScoreUI(int x, int y, int width, int height) {
 		super(x, y, width, height);
 		isEneble = true;
 
-		OffsetX = 25;
+		OffsetX = 7;
 		OffsetY = -20;
-		padding = -10;
+		padding = -20;
 		nextPartPadding = 15;
 
-		appName = new TextField(TextSourses.TETRIS_NAME,x, OffsetX, y ,height+ OffsetY);
+		appName = new TextField(TextSourses.TETRIS_NAME,x, OffsetX, y ,height+ 2*OffsetY);
 		appName.setColor(Color.BLACK);
-		appName.setWidth(100);
+		appName.setAlign(Align.bottom);
 
-		hiIndicator = new TextField(TextSourses.HI_NAME,x,OffsetX,y , height+ 2*OffsetY+2*padding);
+		hiIndicator = new TextField(TextSourses.HI_NAME,x,2*OffsetX,y , height+ 3*OffsetY+padding);
 		hiIndicator.setColor(Color.RED);
-		hiIndicator.setWidth(15);
 		hiIndicator.setDisable(true);
 
-		scoreName = new TextField(TextSourses.SCORE_NAME,x,2*OffsetX,y , height+ 2*OffsetY+2*padding);
+		scoreName = new TextField(TextSourses.SCORE_NAME,x,OffsetX,y , height+ 3*OffsetY+padding);
 		scoreName.setColor(Color.BLACK);
-		scoreName.setWidth(50);
+		scoreName.setAlign(Align.center);
 
-		scoreText = new TextField(getScore(),x,OffsetX,y, height+ 3*OffsetY+2*padding);
+		scoreText = new TextField(getScore(),x,-2,y, height+ 4*OffsetY+padding);
 		scoreText.setColor(Color.BLACK);
-		scoreText.setWidth(100);
+		scoreText.setAlign(Align.center);
 
-		speedName = new TextField(TextSourses.SPEED_NAME,x,OffsetX,y, height+ 4*OffsetY+3*padding);
+		speedName = new TextField(TextSourses.SPEED_NAME,x,OffsetX,y, height+ 4*OffsetY+2*padding);
 		speedName.setColor(Color.BLACK);
-		speedName.setWidth(100);
+		speedName.setAlign(Align.bottom);
 
-		speedText = new TextField(speed+"",x,OffsetX,y , height+ 5*OffsetY+3*padding);
+		speedText = new TextField(speed+"",x,8*OffsetX,y , height+ 5*OffsetY+2*padding);
 		speedText.setColor(Color.BLACK);
-		speedText.setWidth(100);
+		speedText.setAlign(Align.bottomRight);
 
 		pauseIndicator = new TextField(TextSourses.PAUSE_TEXT,x,OffsetX,y,height+ 6*OffsetY+3*padding);
 		pauseIndicator.setColor(Color.RED);
-		pauseIndicator.setWidth(100);
+		pauseIndicator.setAlign(Align.center);
 		pauseIndicator.setDisable(true);
+
+		hiScore = HighScoreManager.getHigh();
 	}
 
 	public void setNextPart(Part nextPart) {
@@ -96,6 +101,7 @@ public class ScoreUI extends UI {
 		backGround = new Sprite(texture);
 		backGround.setPosition(x,y);
 		backGround.setSize(width,height);
+		backGround.setColor(Color.BLACK);
 	}
 
 	@Override
@@ -138,6 +144,7 @@ public class ScoreUI extends UI {
 
 		if(backGround!=null){
 			backGround.setPosition(x,y);
+
 		}
 
 		if(nextPart!=null){
@@ -193,6 +200,9 @@ public class ScoreUI extends UI {
 
 	public void setScore(int score) {
 		this.score = score;
+		if(hiScore<score){
+			setHI();
+		}
 		scoreText.setTextString(getScore());
 	}
 

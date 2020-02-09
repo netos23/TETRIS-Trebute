@@ -3,7 +3,7 @@ package com.fbtw.tetris;
 
 import com.badlogic.gdx.Game;
 
-import com.fbtw.tetris.screans.GameScrean;
+import com.fbtw.tetris.screans.GameScreen;
 import com.fbtw.tetris.utils.PlatformsVariants;
 
 
@@ -24,7 +24,7 @@ public static PlatformsVariants platform;
 
 	@Override
 	public void create() {
-		setScreen(new GameScrean(this,1));
+		setScreen(new GameScreen(this,3));
 
 
 	}
