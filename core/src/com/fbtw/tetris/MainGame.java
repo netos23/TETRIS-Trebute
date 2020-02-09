@@ -24,7 +24,7 @@ public static PlatformsVariants platform;
 
 	@Override
 	public void create() {
-		setScreen(new GameScreen(this,3));
+		setScreen(new GameScreen(this,1));
 
 
 	}

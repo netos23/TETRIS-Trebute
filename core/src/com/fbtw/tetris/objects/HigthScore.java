@@ -6,6 +6,10 @@ public class HigthScore  implements Serializable,Comparable<HigthScore> {
 
 	private static final long serialVersionUID = 1L;
 
+
+	private static final int ALL_SYMBOLS = 20;
+	private static final char SPLIT_SYMBOL = '.';
+
 	private String name;
 	private Integer score;
 
@@ -39,6 +43,16 @@ public class HigthScore  implements Serializable,Comparable<HigthScore> {
 
 	@Override
 	public String toString() {
-		return name+" "+score;
+		StringBuilder builder = new StringBuilder();
+		builder.append(name);
+
+		int additional = ALL_SYMBOLS - (name.length()+(score+"").length());
+
+		for (int i=0;i<additional;i++){
+			builder.append(SPLIT_SYMBOL);
+		}
+		builder.append(score);
+
+		return builder.toString();
 	}
 }
