@@ -16,7 +16,7 @@ import com.fbtw.tetris.utils.UIManager;
 
 public class GameScreen implements Screen {
     private boolean isFullscrean;
-    private Game game;
+    private MainGame game;
     private OrthographicCamera camera;
     private SpriteBatch batch;
     private GameScreanManeger maneger;
@@ -29,7 +29,7 @@ public class GameScreen implements Screen {
 
     private boolean isPause;
 
-    public GameScreen(Game game, int speed) {
+    public GameScreen(MainGame game, int speed) {
         super();
         HighScoreManager.initHigthScoreManager();
         HighScoreManager.loadScores();
@@ -88,7 +88,7 @@ public class GameScreen implements Screen {
         if(!isPause) {
             if(maneger.update(delta)){
 
-                game.setScreen(new GameOverScreen(maneger.getScore()));
+                game.setScreen(new GameOverScreen(game,maneger.getScore()));
             }
         }
 

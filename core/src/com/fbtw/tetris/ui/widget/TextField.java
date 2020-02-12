@@ -26,7 +26,7 @@ public class TextField implements Disengageable {
 
     private Color color;
 
-    private boolean isEneble;
+    protected boolean isEneble;
 
     private Align align;
 
@@ -107,4 +107,8 @@ public class TextField implements Disengageable {
         this.x = x;
         this.y = y;
     }
+
+	public void setFontSize(float fontSize) {
+        text.setFontScale(fontSize);
+	}
 }

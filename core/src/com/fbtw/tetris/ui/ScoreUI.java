@@ -36,38 +36,45 @@ public class ScoreUI extends UI {
 		super(x, y, width, height);
 		isEneble = true;
 
-		OffsetX = 7;
+		OffsetX = 22;
 		OffsetY = -20;
-		padding = -20;
+		padding = -18;
 		nextPartPadding = 15;
 
 		appName = new TextField(TextSourses.TETRIS_NAME,x, OffsetX, y ,height+ 2*OffsetY);
+		appName.setFontSize(0.8f);
 		appName.setColor(Color.BLACK);
 		appName.setAlign(Align.bottom);
 
-		hiIndicator = new TextField(TextSourses.HI_NAME,x,2*OffsetX,y , height+ 3*OffsetY+padding);
+		hiIndicator = new TextField(TextSourses.HI_NAME,x, (int) (0.5f*OffsetX),y , height+ 3*OffsetY+padding);
+		hiIndicator.setFontSize(0.7f);
 		hiIndicator.setColor(Color.RED);
 		hiIndicator.setDisable(true);
 
-		scoreName = new TextField(TextSourses.SCORE_NAME,x,OffsetX,y , height+ 3*OffsetY+padding);
+		scoreName = new TextField(TextSourses.SCORE_NAME,x, (int) (1.5f*OffsetX),y , height+ 3*OffsetY+padding);
+		scoreName.setFontSize(0.7f);
 		scoreName.setColor(Color.BLACK);
 		scoreName.setAlign(Align.center);
 
-		scoreText = new TextField(getScore(),x,-2,y, height+ 4*OffsetY+padding);
+		scoreText = new TextField(getScore(),x,OffsetX+2,y, height+ 4*OffsetY+padding);
+		scoreText.setFontSize(0.6f);
 		scoreText.setColor(Color.BLACK);
 		scoreText.setAlign(Align.center);
 
-		speedName = new TextField(TextSourses.SPEED_NAME,x,OffsetX,y, height+ 4*OffsetY+2*padding);
+		speedName = new TextField(TextSourses.SPEED_NAME,x,(int) (1.5f*OffsetX),y, height+ 4*OffsetY+2*padding);
+		speedName.setFontSize(0.6f);
 		speedName.setColor(Color.BLACK);
 		speedName.setAlign(Align.bottom);
 
-		speedText = new TextField(speed+"",x,8*OffsetX,y , height+ 5*OffsetY+2*padding);
+		speedText = new TextField(speed+"",x, (int) (3.3f*OffsetX),y , height+ 5*OffsetY+2*padding);
+		speedText.setFontSize(0.7f);
 		speedText.setColor(Color.BLACK);
-		speedText.setAlign(Align.bottomRight);
+		speedText.setAlign(Align.bottom);
 
-		pauseIndicator = new TextField(TextSourses.PAUSE_TEXT,x,OffsetX,y,height+ 6*OffsetY+3*padding);
+		pauseIndicator = new TextField(TextSourses.PAUSE_TEXT,x,(int) (1.5f*OffsetX),y,height+ 6*OffsetY+2*padding-8);
+		pauseIndicator.setFontSize(0.7f);
 		pauseIndicator.setColor(Color.RED);
-		pauseIndicator.setAlign(Align.center);
+		pauseIndicator.setAlign(Align.bottom);
 		pauseIndicator.setDisable(true);
 
 		hiScore = HighScoreManager.getHigh();

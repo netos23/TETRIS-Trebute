@@ -8,7 +8,7 @@ public class HigthScore  implements Serializable,Comparable<HigthScore> {
 
 
 	private static final int ALL_SYMBOLS = 20;
-	private static final char SPLIT_SYMBOL = '.';
+	private static final char SPLIT_SYMBOL = ' ';
 
 	private String name;
 	private Integer score;

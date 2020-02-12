@@ -132,6 +132,17 @@ public  class HighScoreManager {
 
 	}
 
+	public static int getLow(){
+		if(scoresTable.size()>HIGTH_SCORE_QUTE-1){
+			return scoresTable.get(0).getScore();
+		}else {
+			return -1;
+		}
+
+	}
+
+
+
 	public static boolean isInit(){
 		return init;
 	}

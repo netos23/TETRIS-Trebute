@@ -24,6 +24,8 @@ public class TextTable<T> implements Disengageable {
 
 	private int x;
 	private int y;
+	private float width;
+	private int heigth;
 
 	private Color color;
 
@@ -39,10 +41,10 @@ public class TextTable<T> implements Disengageable {
 		this.isEnumerable = isEnumerable;
 		isEnable = true;
 
-		offsetX=10;
-		offsetY=20;
+		offsetX = 10;
+		offsetY = 20;
 
-		n=information.size();
+		n = information.size();
 		rows = new ArrayList<>();
 		enumeration = new ArrayList<>();
 
@@ -50,19 +52,20 @@ public class TextTable<T> implements Disengageable {
 
 		//todo: системные разделители
 
-		int i=information.size();
-		for(T element: information){
-			Label row = new Label(element.toString(),skin.get("default", Label.LabelStyle.class));
-
-			row.setAlignment(Align.center);
+		int i = information.size();
+		for (T element : information) {
+			Label row = new Label(element.toString(), skin.get("default", Label.LabelStyle.class));
+			row.setWidth(450);
+			row.setWrap(true);
+			row.setAlignment(Align.left);
 			row.setFontScale(0.5f);
 			row.setColor(Color.BLACK);
 			row.setWrap(true);
-			row.setWidth( 250);
+			row.setWidth(250);
 			rows.add(row);
 
-			Label index = new Label(i+"",skin.get("default", Label.LabelStyle.class));
-			index.setAlignment(Align.center);
+			Label index = new Label(i + "", skin.get("default", Label.LabelStyle.class));
+			index.setAlignment(Align.left);
 			index.setFontScale(0.5f);
 			index.setColor(Color.BLACK);
 			enumeration.add(index);
@@ -70,7 +73,8 @@ public class TextTable<T> implements Disengageable {
 
 		}
 
-		setPosition(x,y);
+		setPosition(x, y);
+		width = enumeration.get(0).getWidth() + rows.get(0).getWidth()-offsetX*9;
 
 	}
 
@@ -94,7 +98,7 @@ public class TextTable<T> implements Disengageable {
 
 
 		for (int i=0;i<n;i++){
-			rows.get(i).setPosition(x+offsetX,y+offsetY*i);
+			rows.get(i).setPosition(x+offsetX*5,y+offsetY*i);
 			enumeration.get(i).setPosition(x,y+offsetY*i);
 		}
 
@@ -113,5 +117,9 @@ public class TextTable<T> implements Disengageable {
 			rows.get(i).setColor(color);
 			enumeration.get(i).setColor(color);
 		}
+	}
+
+	public int getWidth() {
+		return (int)width;
 	}
 }
