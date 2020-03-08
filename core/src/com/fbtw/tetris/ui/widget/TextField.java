@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Align;
 import com.fbtw.tetris.ui.Disengageable;
 
 
-public class TextField implements Disengageable {
+public class TextField implements Widget,Disengageable {
     //private BitmapFont text;
     private Label text;
 
@@ -28,7 +28,7 @@ public class TextField implements Disengageable {
 
     protected boolean isEneble;
 
-    private Align align;
+
 
 
     public TextField(String textString, int x, int localX, int y, int localY) {
@@ -49,6 +49,7 @@ public class TextField implements Disengageable {
         isEneble = true;
     }
 
+    @Override
     public void render(SpriteBatch batch){
         if(isEneble) {
             text.setPosition(x+localX, y+localY);
@@ -71,7 +72,8 @@ public class TextField implements Disengageable {
         text.setText(textString);
     }
 
-    public int getX() {
+    @Override
+    public int getPosX() {
         return x;
     }
 
@@ -79,8 +81,24 @@ public class TextField implements Disengageable {
         this.x = x;
     }
 
-    public int getY() {
+    @Override
+    public int getPosY() {
         return y;
+    }
+
+	@Override
+	public int getWidth() {
+		return (int) text.getWidth();
+	}
+
+	@Override
+	public int getHeigth() {
+		return (int) text.getHeight();
+	}
+
+    @Override
+    public void dispose() {
+
     }
 
     public void setY(int y) {
@@ -93,22 +111,41 @@ public class TextField implements Disengageable {
         return color;
     }
 
+    @Override
     public void setColor(Color color) {
         this.color = color;
         text.setColor(color);
     }
 
-    @Override
+	@Override
+	public Widget clone() {
+		return null;
+	}
+
+	@Override
     public void setDisable(boolean disable) {
         isEneble=!disable;
     }
-
+    @Override
     public void setPosition(int x, int y){
         this.x = x;
         this.y = y;
     }
-
+    @Override
 	public void setFontSize(float fontSize) {
         text.setFontScale(fontSize);
 	}
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    public void setOffsetX(int localX) {
+        this.localX = localX;
+    }
+
+    public void setOffsetY(int localY) {
+        this.localY = localY;
+    }
 }

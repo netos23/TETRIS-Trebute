@@ -25,13 +25,15 @@ public class Block {
 
 
         blockSprite = new Sprite(TextureManager.blockTexture);
-        blockSprite.setColor(color);
+        setColor(color);
         blockSprite.setSize(weidth,heigth);
 
         setPosition(posX,posY);
     }
 
-
+    void setColor(Color color) {
+        blockSprite.setColor(color);
+    }
 
 
     public void setPosition(int x, int y){

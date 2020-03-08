@@ -10,7 +10,6 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'org.wisepersist:gwt-gradle-plugin:1.0.6'
         classpath 'com.android.tools.build:gradle:3.2.0'
         
 
@@ -38,9 +37,6 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
-
-
-
 }
 
 project(":desktop") {
@@ -72,20 +68,6 @@ project(":android") {
     }
 }
 
-project(":html") {
-    apply plugin: "gwt"
-    apply plugin: "war"
-
-
-    dependencies {
-        compile project(":core")
-        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
-        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
-        
-    }
-}
-
 project(":core") {
     apply plugin: "java"
 
@@ -95,7 +77,6 @@ project(":core") {
         
     }
 }
-
 
 tasks.eclipse.doLast {
     delete ".project"

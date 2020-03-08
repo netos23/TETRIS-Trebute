@@ -129,6 +129,13 @@ public  class Part {
 		updateBlocks();
 	}
 
+	public void setColour(Color colour){
+		this.colour = colour;
+		for(Block block : blocks){
+			block.setColor(colour);
+		}
+	}
+
 
 	private boolean optimizeModel(int[][] model) {
 		int mergeLeft = 0, mergeDown = 0;
@@ -232,6 +239,9 @@ public  class Part {
 
 	public void resize(int w, int h) {
 
+		BLOCK_SIZE_Y = h;
+		BLOCK_SIZE_X = w;
+
 		for (Block block : blocks) {
 			block.resize(w, h);
 		}
@@ -269,5 +279,13 @@ public  class Part {
 
 	public int[][] getModel() {
 		return model;
+	}
+
+	public int getN() {
+		return n;
+	}
+
+	public Color getColour() {
+		return colour;
 	}
 }

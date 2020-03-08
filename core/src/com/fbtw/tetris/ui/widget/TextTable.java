@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-public class TextTable<T> implements Disengageable {
+public class TextTable<T> implements Widget,Disengageable {
 
 	private ArrayList<T> information;
 	private ArrayList<Label> rows;
@@ -77,7 +77,7 @@ public class TextTable<T> implements Disengageable {
 		width = enumeration.get(0).getWidth() + rows.get(0).getWidth()-offsetX*9;
 
 	}
-
+	@Override
 	public void render(SpriteBatch batch){
 		if(isEnable){
 
@@ -91,7 +91,7 @@ public class TextTable<T> implements Disengageable {
 		}
 	}
 
-
+	@Override
 	public void setPosition(int x, int y){
 		this.x = x;
 		this.y = y;
@@ -102,6 +102,15 @@ public class TextTable<T> implements Disengageable {
 			enumeration.get(i).setPosition(x,y+offsetY*i);
 		}
 
+	}
+
+	@Override
+	public void setFontSize(float fontSize) {
+		for (int i = 0; i < rows.size(); i++) {
+
+			rows.get(i).setFontScale(fontSize);
+			enumeration.get(i).setFontScale(fontSize);
+		}
 	}
 
 	@Override
@@ -119,7 +128,38 @@ public class TextTable<T> implements Disengageable {
 		}
 	}
 
+	@Override
+	public Widget clone() {
+		return null;
+	}
+
+	@Override
+	public int getPosX() {
+		return x;
+	}
+
+	@Override
+	public int getPosY() {
+		return y;
+	}
+
 	public int getWidth() {
 		return (int)width;
+	}
+
+	@Override
+	public int getHeigth() {
+		//todo: переопределить
+		return 0;
+	}
+
+	@Override
+	public void dispose() {
+
+	}
+
+	@Override
+	public void resize(int width, int height) {
+
 	}
 }

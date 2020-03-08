@@ -35,7 +35,7 @@ public class GameScreen implements Screen {
         HighScoreManager.loadScores();
         this.game = game;
         this.speed = speed;
-        TextureManager.init();
+        //TextureManager.init();
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
 
@@ -148,6 +148,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        batch.dispose();
         TextureManager.dispose();
     }
 

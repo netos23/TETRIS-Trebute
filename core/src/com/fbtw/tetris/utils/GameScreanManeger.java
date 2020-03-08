@@ -372,4 +372,12 @@ public class GameScreanManeger {
         uiManager.getScore().setScore(score);
         uiManager.getScore().setNextPart(queue.peek());
     }
+
+    public void dispose(){
+        prefabs = null;
+        grid = null;
+        queue = null;
+        ground = null;
+
+    }
 }

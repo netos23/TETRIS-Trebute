@@ -1,7 +1,6 @@
 package com.fbtw.tetris.screans;
 
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.Input;
@@ -19,6 +18,7 @@ import com.fbtw.tetris.ui.widget.TextField;
 import com.fbtw.tetris.ui.widget.TextTable;
 import com.fbtw.tetris.utils.HighScoreManager;
 import com.fbtw.tetris.utils.TextSourses;
+import com.fbtw.tetris.utils.TextureManager;
 
 public class GameOverScreen implements Screen {
 	private SpriteBatch batch;
@@ -124,7 +124,7 @@ public class GameOverScreen implements Screen {
 	public void resize(int width, int height) {
 		if(higthScoreTextTable!=null) {
 			this.width = higthScoreTextTable.getWidth();
-			System.out.println(Gdx.graphics.getHeight());
+			//System.out.println(Gdx.graphics.getHeight());
 		}
 		int offsetX =  this.width + MainGame.BLOCK_SIZE_X ;
 		if(width<this.width+offsetX){
@@ -167,7 +167,9 @@ public class GameOverScreen implements Screen {
 
 	@Override
 	public void dispose() {
-
+		batch.dispose();
+		TextureManager.dispose();
+		higthScoreTextTable = null;
 	}
 
 	private void hendleInput(){
@@ -198,7 +200,7 @@ public class GameOverScreen implements Screen {
 	public void showTable(){
 		release = true;
 		continueName.setTextString(TextSourses.PRESS_ANY);
-		continueName.setPosition(-15,continueName.getY());
+		continueName.setPosition(-15,continueName.getPosY());
 		enterName.setDisable(true);
 		higthScoreTextTable = new TextTable<>(HighScoreManager.getScoresTable(),-15,30,true);
 		higthScoreTextTable.setColor(Color.WHITE);
@@ -206,7 +208,7 @@ public class GameOverScreen implements Screen {
 
 
 		highScoreMsg.setTextString(TextSourses.HIGH_SCORE_1);
-		highScoreMsg.setPosition(0,highScoreMsg.getY());
+		highScoreMsg.setPosition(0,highScoreMsg.getPosY());
 		highScoreMsg.setFontSize(1f);
 		highScoreMsg.setPosition((int) (-0.3f*gameOverPadding),260);
 		higthScoreTextTable.setDisable(false);

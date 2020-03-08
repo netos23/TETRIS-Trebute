@@ -4,7 +4,9 @@ package com.fbtw.tetris;
 import com.badlogic.gdx.Game;
 
 import com.fbtw.tetris.screans.GameScreen;
+import com.fbtw.tetris.screans.MenuScreen;
 import com.fbtw.tetris.utils.PlatformsVariants;
+import com.fbtw.tetris.utils.TextureManager;
 
 
 public class MainGame extends Game {
@@ -15,8 +17,8 @@ public static  int SCREAN_SIZE_Y = 600;
 public static PlatformsVariants platform;
 
 	public MainGame(int X,int Y,PlatformsVariants variants) {
-		SCREAN_SIZE_X = X;
-		SCREAN_SIZE_Y = Y;
+		/*SCREAN_SIZE_X = X;
+		SCREAN_SIZE_Y = Y;*/
 
 		platform = variants;
 
@@ -24,7 +26,9 @@ public static PlatformsVariants platform;
 
 	@Override
 	public void create() {
-		setScreen(new GameScreen(this,1));
+		TextureManager.init();
+		setScreen(new MenuScreen(this));
+	//	setScreen(new GameScreen(this,1));
 
 
 	}

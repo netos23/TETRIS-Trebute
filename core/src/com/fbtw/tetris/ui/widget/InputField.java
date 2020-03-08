@@ -9,11 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 import com.fbtw.tetris.ui.Disengageable;
 
-public class InputField implements Disengageable {
+public class InputField implements Widget,Disengageable {
 
 	private Label[] symbols;
 	private int cursor;
-	private int inited;
 	private int length;
 
 	private int timeCycle;
@@ -305,6 +304,7 @@ public class InputField implements Disengageable {
 		}
 	}
 
+	@Override
 	public void render(SpriteBatch batch) {
 		if (isEnable) {
 			for (int i = 0; i < symbols.length; i++) {
@@ -316,7 +316,7 @@ public class InputField implements Disengageable {
 		}
 	}
 
-
+	@Override
 	public void setPosition(int x, int y) {
 		this.x = x;
 		this.y = y;
@@ -327,16 +327,48 @@ public class InputField implements Disengageable {
 		}
 	}
 
+	@Override
 	public void setFontSize(float fontSize) {
 		for (Label l : symbols) {
 			l.setFontScale(fontSize);
 		}
 	}
-
+	@Override
 	public void setColor(Color color) {
 		for (Label l : symbols) {
 			l.setColor(color);
 		}
+	}
+
+	@Override
+	public Widget clone() {
+		return null;
+	}
+
+	@Override
+	public int getPosX() {
+		return x;
+	}
+
+	@Override
+	public int getPosY() {
+		return y;
+	}
+
+	//todo: переопределить
+	@Override
+	public int getWidth() {
+		return 0;
+	}
+
+	@Override
+	public int getHeigth() {
+		return 0;
+	}
+
+	@Override
+	public void dispose() {
+
 	}
 
 
@@ -377,5 +409,10 @@ public class InputField implements Disengageable {
 	@Override
 	public void setDisable(boolean disable) {
 		isEnable = !disable;
+	}
+
+	@Override
+	public void resize(int width, int height) {
+
 	}
 }
