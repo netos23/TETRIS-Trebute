@@ -9,8 +9,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.fbtw.tetris.MainGame;
+import com.fbtw.tetris.utils.Expression;
 import com.fbtw.tetris.utils.GameScreanManeger;
 import com.fbtw.tetris.utils.HighScoreManager;
+import com.fbtw.tetris.utils.PlatformsVariants;
 import com.fbtw.tetris.utils.TextureManager;
 import com.fbtw.tetris.utils.UIManager;
 
@@ -60,6 +62,29 @@ public class GameScreen implements Screen {
         isPause = false;
 
         isFullscrean = Gdx.graphics.isFullscreen();
+
+        if(MainGame.platform== PlatformsVariants.ANDROID){
+            maneger.getControls().setPause(new Expression() {
+                @Override
+                public void call(Object... params) {
+
+                    if(!isPause){
+                        pause();
+                    }else {
+                        resume();
+                    }
+
+                    maneger.getControls().setPause(isPause);
+                }
+            });
+
+            maneger.getControls().setMenu(new Expression() {
+                @Override
+                public void call(Object... params) {
+                    game.setScreen(new MenuScreen(game));
+                }
+            });
+        }
     }
 
     @Override

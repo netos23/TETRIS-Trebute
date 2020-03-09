@@ -4,12 +4,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.fbtw.tetris.MainGame;
 import com.fbtw.tetris.ui.Disengageable;
+import com.fbtw.tetris.utils.PlatformsVariants;
 
-public class InputField implements Widget,Disengageable {
+public class InputField implements Widget,Disengageable, Input.TextInputListener {
 
 	private Label[] symbols;
 	private int cursor;
@@ -32,7 +38,9 @@ public class InputField implements Widget,Disengageable {
 
 	private static char SYMBOL_DEFOULT = '_';
 
-	public InputField(int len, int x, int y, int offsetX) {
+	private boolean isTyping, isCommit;
+
+	public InputField(int len, int x, int y, int offsetX, String androidMSG) {
 		this.x = x;
 		this.y = y;
 		this.offsetX = offsetX;
@@ -56,6 +64,31 @@ public class InputField implements Widget,Disengageable {
 			symbols[i].setAlignment(Align.left);
 		}
 		setPosition(x, y);
+
+		if (MainGame.platform == PlatformsVariants.ANDROID) {
+			Stage inputController = new Stage();
+			isCommit = false;
+			InputField listner = this;
+			inputController.addListener(new ClickListener() {
+				@Override
+				public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+					float mX = Gdx.graphics.getWidth() / 1794f;
+					float mY = Gdx.graphics.getHeight() / 1080f;
+
+					if (y > 360 * mY && y < 600 * mY && x > 700 * mX && x < 1100 * mX) {
+						Gdx.input.getTextInput(listner,androidMSG,"","");
+						isTyping = true;
+					}else{
+						isCommit = true;
+					}
+
+					return true;
+				}
+			});
+
+			Gdx.input.setInputProcessor(inputController);
+
+		}
 
 
 	}
@@ -271,7 +304,7 @@ public class InputField implements Widget,Disengageable {
 			}
 		}
 
-		return result;
+		return result||isCommit;
 	}
 
 	public boolean update() {
@@ -333,6 +366,7 @@ public class InputField implements Widget,Disengageable {
 			l.setFontScale(fontSize);
 		}
 	}
+
 	@Override
 	public void setColor(Color color) {
 		for (Label l : symbols) {
@@ -386,6 +420,7 @@ public class InputField implements Widget,Disengageable {
 		return (result.equals("")) ? "UNKNOWN" : result;
 	}
 
+
 	private void trim() {
 		StringBuilder builder = new StringBuilder();
 
@@ -414,5 +449,24 @@ public class InputField implements Widget,Disengageable {
 	@Override
 	public void resize(int width, int height) {
 
+	}
+
+	@Override
+	public void input(String text) {
+		for (int i = 0; i < symbols.length; i++) {
+			if (i < text.length()) {
+				symbols[i].setText(text.charAt(i) + "");
+			} else {
+				symbols[i].setText(SYMBOL_DEFOULT + "");
+			}
+		}
+
+		isTyping = false;
+		isCommit = true;
+	}
+
+	@Override
+	public void canceled() {
+		isTyping = false;
 	}
 }

@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
 import com.fbtw.tetris.MainGame;
 import com.fbtw.tetris.objects.HigthScore;
+import com.fbtw.tetris.os_optimization.android.AndroidControlsSourses;
 import com.fbtw.tetris.ui.widget.FleshingText;
 import com.fbtw.tetris.ui.widget.InputField;
 import com.fbtw.tetris.ui.widget.TextField;
@@ -59,7 +60,7 @@ public class GameOverScreen implements Screen {
 		gameOver.setAlign(Align.left);
 
 
-		enterName = new InputField(7,35,170,0);
+		enterName = new InputField(7,35,170,0, AndroidControlsSourses.name_msg);
 		enterName.setFontSize(0.8f);
 		enterName.setDisable(false);
 
@@ -190,7 +191,7 @@ public class GameOverScreen implements Screen {
 
 		if(release){
 
-			if(Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)){
+			if(Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)||Gdx.input.isTouched()){
 				game.setScreen(new GameScreen(game,1));
 			}
 		}

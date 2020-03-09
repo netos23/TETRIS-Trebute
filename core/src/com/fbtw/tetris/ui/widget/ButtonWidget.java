@@ -55,6 +55,7 @@ public class ButtonWidget implements Widget, Selecteble, Disengageable {
 		root = new Button();
 		//todo:естественное задания ширины
 
+
 		width = MainGame.BLOCK_SIZE_X*shape.getN();
 		heigth = MainGame.BLOCK_SIZE_Y;
 		root.setSize(width,heigth);
@@ -65,6 +66,7 @@ public class ButtonWidget implements Widget, Selecteble, Disengageable {
 		txt.setAlign(Align.bottom);
 		txt.setOffsetX(MainGame.BLOCK_SIZE_X*shape.getN()/2-txt.getWidth()/2);
 		txt.setColor(Color.BLACK);
+		txt.setOffsetY(MainGame.BLOCK_SIZE_Y*shape.getHeigth()/2-txt.getHeigth()/4);
 		setPosition(x,y);
 
 		color = shape.getColour();
@@ -200,5 +202,9 @@ public class ButtonWidget implements Widget, Selecteble, Disengageable {
 
 	public String getText(){
 		return txt.getTextString();
+	}
+
+	public int getN(){
+		return shape.getN();
 	}
 }

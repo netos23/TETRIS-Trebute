@@ -47,7 +47,7 @@ public class MenuScreen implements Screen {
 
 
 		if (MainGame.platform == PlatformsVariants.ANDROID) {
-			logo = new Logo(Gdx.graphics.getWidth()/2-MainGame.BLOCK_SIZE_X*8,Gdx.graphics.getHeight()*2/3);
+			logo = new Logo(Gdx.graphics.getWidth()/2-MainGame.BLOCK_SIZE_X*10,Gdx.graphics.getHeight()*2/3);
 
 			s = new Selector("button.txt", Gdx.graphics.getWidth()/2-MainGame.BLOCK_SIZE_X*2, Gdx.graphics.getHeight()/3);
 		} else {

@@ -274,6 +274,17 @@ public  class Part {
 	}
 
 	public int getHeigth() {
+		if(heigth==0){
+			int min = n-1;
+			for (int i=n-1;i>=0;i--){
+				for(int j=0;j<n;j++){
+					if(model[i][j]==1){
+						if(min>i) min=i;
+					}
+				}
+			}
+			heigth = n-min;
+		}
 		return heigth;
 	}
 

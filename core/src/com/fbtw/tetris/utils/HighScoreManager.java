@@ -1,5 +1,7 @@
 package com.fbtw.tetris.utils;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g3d.Environment;
 import com.fbtw.tetris.MainGame;
 import com.fbtw.tetris.objects.HigthScore;
 
@@ -29,12 +31,20 @@ public  class HighScoreManager {
 	public static void loadScores(){
 
 		try {
-			File scores = new File(TextSourses.SERIALIZED_SCORES_FILENAME);
+			File scores;
 
-			switch (MainGame.platform){
+			if(MainGame.platform==PlatformsVariants.ANDROID){
+				scores = new File(Gdx.files.getLocalStoragePath()+TextSourses.SERIALIZED_SCORES_FILENAME);
+
+			}else{
+				scores = new File(TextSourses.SERIALIZED_SCORES_FILENAME);
+			}
+
+		/*	switch (MainGame.platform){
 				case PC_MAC:
 				case PC_LINUX:
-				case PC_WIN:
+				case ANDROID:
+				case PC_WIN:*/
 					FileInputStream in = new FileInputStream(scores);
 					ObjectInputStream reader = new ObjectInputStream(in);
 					scoresTable = new ArrayList<>();
@@ -44,12 +54,12 @@ public  class HighScoreManager {
 					}
 						reader.close();
 						in.close();
-					break;
-				case ANDROID:
+					//break;
+				/*case ANDROID:
 
-					break;
+					break;*/
 
-			}
+			//}
 
 		} catch (IOException ex){
 			ex.printStackTrace();
@@ -62,12 +72,23 @@ public  class HighScoreManager {
 
 	public static void printScores(){
 		try {
-			File scores = new File(TextSourses.SERIALIZED_SCORES_FILENAME);
 
-			switch (MainGame.platform){
+			File scores = null;
+
+			if(MainGame.platform==PlatformsVariants.ANDROID){
+				scores = new File(Gdx.files.getLocalStoragePath()+TextSourses.SERIALIZED_SCORES_FILENAME);
+				scores.createNewFile();
+			}else{
+				scores = new File(TextSourses.SERIALIZED_SCORES_FILENAME);
+			}
+
+
+			/*switch (MainGame.platform){
 				case PC_MAC:
 				case PC_LINUX:
 				case PC_WIN:
+				case ANDROID:
+				default:*/
 					FileOutputStream out = new FileOutputStream(scores);
 					ObjectOutputStream printer = new ObjectOutputStream(out);
 
@@ -82,12 +103,12 @@ public  class HighScoreManager {
 					printer.close();
 					out.close();
 
-					break;
-				case ANDROID:
+					//break;
+				/*case ANDROID:
 
-					break;
+					break;*/
 
-			}
+			//}
 
 		}catch (IOException ex){
 			ex.printStackTrace();
