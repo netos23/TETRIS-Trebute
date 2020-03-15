@@ -2,13 +2,14 @@ package com.fbtw.tetris.ui.widget;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 
-
+import com.badlogic.gdx.utils.Disposable;
 import com.fbtw.tetris.ui.Disengageable;
 import com.fbtw.tetris.utils.Expression;
 
@@ -33,6 +34,8 @@ public class Selector implements Widget, Disengageable {
 
 	private int current;
 
+	private Sound beepSound;
+
 	public Selector(String shapeName, int x, int y) {
 		this.x = x;
 		this.y = y;
@@ -41,7 +44,8 @@ public class Selector implements Widget, Disengageable {
 
 		offsetY = 10;
 
-
+		beepSound = Gdx.audio.newSound(Gdx.files.internal("sound/beep.mp3"));
+		beepSound.setVolume(0,0.9f);
 
 		buttons = new ArrayList<>();
 		controller = new Stage(/*new FillViewport(1920,1080)*/);
@@ -170,7 +174,6 @@ public class Selector implements Widget, Disengageable {
 	}
 
 	public void commit(){
-		//setPosition(x,y);
 		for(ButtonWidget buttonWidget:buttons){
 			controller.addActor(buttonWidget.getButton());
 		}
@@ -181,7 +184,7 @@ public class Selector implements Widget, Disengageable {
 
 	public void dispose() {
 		controller.dispose();
-
+		beepSound.dispose();
 	}
 
 	private void handleInput(){
@@ -190,12 +193,12 @@ public class Selector implements Widget, Disengageable {
 		}
 */
 		if(Gdx.input.isKeyJustPressed(Input.Keys.UP)){
-
-				chengeItem(false);
+				beepSound.play();
+				chengeItem(true);
 
 		}else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
-
-				chengeItem(true);
+				beepSound.play();
+				chengeItem(false);
 
 		}else if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
 			if(current!=-1){
@@ -203,6 +206,7 @@ public class Selector implements Widget, Disengageable {
 			}else{
 				buttons.get(buttons.size()-1).push();
 			}
+			beepSound.play();
 		}else if(Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)||Gdx.input.justTouched()){
 			if(current!=-1) {
 				buttons.get(current).onDeSelect();
@@ -246,4 +250,8 @@ public class Selector implements Widget, Disengageable {
 	public void update(){
 		handleInput();
 	}
+
+
+
+
 }

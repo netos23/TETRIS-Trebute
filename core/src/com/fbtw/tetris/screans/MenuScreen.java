@@ -2,6 +2,7 @@ package com.fbtw.tetris.screans;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -28,7 +29,9 @@ public class MenuScreen implements Screen {
 
 	private MainGame game;
 
-	private ButtonWidget widget;
+	//private ButtonWidget widget;
+
+	private Music theme;
 
 	public MenuScreen(MainGame game) {
 		this.game = game;
@@ -41,7 +44,10 @@ public class MenuScreen implements Screen {
 		anim = new HorMoveAnimation(0, 1, background);
 		anim.play();
 
-
+		theme = Gdx.audio.newMusic(Gdx.files.internal("sound/menu_theme_classic.mp3"));
+		theme.setLooping(true);
+		theme.setVolume(0.2f);
+		theme.play();
 
 		//logo = new Logo(50,200); //for posters
 
@@ -62,7 +68,8 @@ public class MenuScreen implements Screen {
 		s.setOnClickListner(3, new Expression() {
 			@Override
 			public void call(Object... params) {
-
+				theme.stop();
+				dispose();
 				game.setScreen(new GameScreen(game, 1));
 			}
 		});
@@ -161,12 +168,12 @@ public class MenuScreen implements Screen {
 
 	@Override
 	public void pause() {
-
+		theme.pause();
 	}
 
 	@Override
 	public void resume() {
-
+		theme.play();
 	}
 
 	@Override
@@ -176,7 +183,9 @@ public class MenuScreen implements Screen {
 
 	@Override
 	public void dispose() {
+	    //TextureManager.dispose();
 		batch.dispose();
 		s.dispose();
+		theme.dispose();
 	}
 }

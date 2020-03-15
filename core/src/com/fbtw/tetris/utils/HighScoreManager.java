@@ -54,6 +54,8 @@ public  class HighScoreManager {
 					}
 						reader.close();
 						in.close();
+						in=null;
+						reader=null;
 					//break;
 				/*case ANDROID:
 

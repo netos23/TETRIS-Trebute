@@ -3,6 +3,7 @@ package com.fbtw.tetris.screans;
 import com.badlogic.gdx.*;
 
 
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -30,6 +31,10 @@ public class GameScreen implements Screen {
     private int speed;
 
     private boolean isPause;
+
+    private Music theme;
+
+    private boolean disposed;
 
     public GameScreen(MainGame game, int speed) {
         super();
@@ -63,6 +68,11 @@ public class GameScreen implements Screen {
 
         isFullscrean = Gdx.graphics.isFullscreen();
 
+        theme = Gdx.audio.newMusic(Gdx.files.internal("sound/game_theme.mp3"));
+        theme.setVolume(0.15f);
+        theme.setLooping(true);
+        theme.play();
+
         if(MainGame.platform== PlatformsVariants.ANDROID){
             maneger.getControls().setPause(new Expression() {
                 @Override
@@ -81,6 +91,8 @@ public class GameScreen implements Screen {
             maneger.getControls().setMenu(new Expression() {
                 @Override
                 public void call(Object... params) {
+                    theme.stop();
+                    dispose();
                     game.setScreen(new MenuScreen(game));
                 }
             });
@@ -98,22 +110,24 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(camera.combined);
 
-        update(delta);
+
 
         batch.begin();
-
         gameBackground.draw(batch);
         background.draw(batch);
         maneger.render(batch);
         uiManager.render(batch);
         batch.end();
+
+        update(delta);
     }
 
     public void update(float delta){
         if(!isPause) {
             if(maneger.update(delta)){
-
+                theme.stop();
                 game.setScreen(new GameOverScreen(game,maneger.getScore()));
+                dispose();
             }
         }
 
@@ -157,11 +171,13 @@ public class GameScreen implements Screen {
     @Override
     public void pause() {
         isPause = true;
+        theme.pause();
         uiManager.getScore().setPause(true);
     }
 
     @Override
     public void resume() {
+        theme.play();
         isPause = false;
         uiManager.getScore().setPause(false);
     }
@@ -174,7 +190,10 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
-        TextureManager.dispose();
+        maneger.dispose();
+        theme.dispose();
+        disposed = true;
+        //TextureManager.dispose();
     }
 
     private void hendleInput(){

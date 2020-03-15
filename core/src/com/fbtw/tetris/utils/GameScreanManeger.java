@@ -2,6 +2,7 @@ package com.fbtw.tetris.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -47,6 +48,8 @@ public class GameScreanManeger {
 
     private Random random;
 
+    private Sound beepSpund;
+
     public GameScreanManeger(int speed) {
         this.speed = speed;
         random = new Random();
@@ -70,6 +73,8 @@ public class GameScreanManeger {
 
         timeCycle -= speed + 1;
         defaultTimeCycle = timeCycle;
+
+        beepSpund = Gdx.audio.newSound(Gdx.files.internal("sound/game_beep.mp3"));
 
         if(MainGame.platform==PlatformsVariants.ANDROID) {
             controls = new AndroidControls(((1.0f * MainGame.BLOCK_SIZE_Y * getGrid_size_y()) / (1.0f * Gdx.graphics.getHeight())), Gdx.graphics.getDisplayMode().width, Gdx.graphics.getDisplayMode().height);
@@ -168,6 +173,7 @@ public class GameScreanManeger {
 
             if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
                 timeCycle = superTimeCycle;
+
             } else {
                 if(!isAcselerated) {
                     timeCycle = defaultTimeCycle;
@@ -189,9 +195,11 @@ public class GameScreanManeger {
                 case -1:
                     break;
                 case 0:
+                    beepSpund.play();
                     activePart.move(BLOCK_SIZE_X, 0);
                     break;
                 case 1:
+                    beepSpund.play();
                     activePart.move(BLOCK_SIZE_X, 0);
                     isUpdatePart = true;
                     break;
@@ -212,9 +220,11 @@ public class GameScreanManeger {
                 case -1:
                     break;
                 case 0:
+                    beepSpund.play();
                     activePart.move(-BLOCK_SIZE_X, 0);
                     break;
                 case 1:
+                    beepSpund.play();
                     activePart.move(-BLOCK_SIZE_X, 0);
                     isUpdatePart = true;
                     break;
@@ -239,11 +249,13 @@ public class GameScreanManeger {
             case -1:
                 break;
             case 0:
+                beepSpund.play();
                 activePart.apply(newModel);
                 activePart.setPosition(newX * BLOCK_SIZE_X, activePart.getPosY());
 
                 break;
             case 1:
+                beepSpund.play();
                 activePart.apply(newModel);
                 isUpdatePart = true;
                 activePart.setPosition(newX * BLOCK_SIZE_X, activePart.getPosY());
@@ -454,7 +466,7 @@ public class GameScreanManeger {
         grid = null;
         queue = null;
         ground = null;
-
+        beepSpund.dispose();
     }
 
     public AndroidControls getControls() {

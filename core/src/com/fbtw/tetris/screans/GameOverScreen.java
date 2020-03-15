@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -35,11 +36,13 @@ public class GameOverScreen implements Screen {
 	private int gameOverPadding;
 	private boolean isFullscrean;
 
-	private int score=186*2;
+	private int score;
 	private int width=207;
 
 	private boolean release;
 	private MainGame game;
+
+	private Music theme;
 
 	public GameOverScreen(MainGame game,int score) {
 		this.score = score;
@@ -49,6 +52,10 @@ public class GameOverScreen implements Screen {
 		camera = new OrthographicCamera();
 
 		camera.setToOrtho(false,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+
+		theme = Gdx.audio.newMusic(Gdx.files.internal("sound/game_over.mp3"));
+		theme.setVolume(0.5f);
+		theme.play();
 
 		release = false;
 
@@ -153,23 +160,25 @@ public class GameOverScreen implements Screen {
 
 	@Override
 	public void pause() {
-
+		theme.pause();
 	}
 
 	@Override
 	public void resume() {
-
+		theme.play();
 	}
 
 	@Override
 	public void hide() {
-
+		pause();
 	}
 
 	@Override
 	public void dispose() {
+        //System.out.println("dis gos");
 		batch.dispose();
-		TextureManager.dispose();
+		theme.dispose();
+		//TextureManager.dispose();
 		higthScoreTextTable = null;
 	}
 
@@ -192,6 +201,8 @@ public class GameOverScreen implements Screen {
 		if(release){
 
 			if(Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)||Gdx.input.isTouched()){
+				theme.stop();
+				dispose();
 				game.setScreen(new GameScreen(game,1));
 			}
 		}
