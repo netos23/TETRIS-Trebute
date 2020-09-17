@@ -12,6 +12,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 700;
 		config.height = 600;
+		config.title = "TETRIS";
 		//config.fullscreen = true;
 
 		//config.resizable = false;

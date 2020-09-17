@@ -80,10 +80,6 @@ public class ButtonWidget implements Widget, Selecteble, Disengageable {
 
 		updateOnClick();
 
-
-
-
-
 	}
 
 

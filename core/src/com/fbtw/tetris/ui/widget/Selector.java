@@ -42,7 +42,7 @@ public class Selector implements Widget, Disengageable {
 
 		isEnable = true;
 
-		offsetY = 10;
+		offsetY = 20;
 
 		beepSound = Gdx.audio.newSound(Gdx.files.internal("sound/beep.mp3"));
 		beepSound.setVolume(0,0.9f);
@@ -252,6 +252,8 @@ public class Selector implements Widget, Disengageable {
 	}
 
 
-
+	public int getButtonsCount(){
+	    return buttons.size();
+    }
 
 }

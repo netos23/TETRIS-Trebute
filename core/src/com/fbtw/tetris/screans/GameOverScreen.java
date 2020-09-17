@@ -175,10 +175,8 @@ public class GameOverScreen implements Screen {
 
 	@Override
 	public void dispose() {
-        //System.out.println("dis gos");
 		batch.dispose();
 		theme.dispose();
-		//TextureManager.dispose();
 		higthScoreTextTable = null;
 	}
 

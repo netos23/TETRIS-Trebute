@@ -6,9 +6,11 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.fbtw.tetris.MainGame;
 import com.fbtw.tetris.ui.animation.HorMoveAnimation;
-import com.fbtw.tetris.ui.widget.ButtonWidget;
 import com.fbtw.tetris.ui.widget.Image;
 import com.fbtw.tetris.ui.widget.Logo;
 
@@ -18,6 +20,8 @@ import com.fbtw.tetris.utils.PlatformsVariants;
 import com.fbtw.tetris.utils.TextureManager;
 
 public class MenuScreen implements Screen {
+	private static final float BUTTONS_K = 1.71f;
+
 
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -52,20 +56,20 @@ public class MenuScreen implements Screen {
 		//logo = new Logo(50,200); //for posters
 
 
-		if (MainGame.platform == PlatformsVariants.ANDROID) {
+		/*if (MainGame.platform == PlatformsVariants.ANDROID) {
 			logo = new Logo(Gdx.graphics.getWidth()/2-MainGame.BLOCK_SIZE_X*10,Gdx.graphics.getHeight()*2/3);
 
 			s = new Selector("button.txt", Gdx.graphics.getWidth()/2-MainGame.BLOCK_SIZE_X*2, Gdx.graphics.getHeight()/3);
-		} else {
+		} else {*/
 			logo = new Logo(50, 400);
 			s = new Selector("button.txt", 310, 200);
-		}
+		//}
 
 		s.addButton("QUIT"); //id = 0
-		s.addButton("SCORE"); //id = 1
-		s.addButton("SETTINGS"); //id = 2
+		/*s.addButton("SCORE"); //id = 1
+		s.addButton("SETTINGS");*/ //id = 2
 		s.addButton("PLAY"); //id = 3
-		s.setOnClickListner(3, new Expression() {
+		s.setOnClickListner(1, new Expression() {
 			@Override
 			public void call(Object... params) {
 				theme.stop();
@@ -81,8 +85,29 @@ public class MenuScreen implements Screen {
 			}
 		});
 
+		if(MainGame.platform==PlatformsVariants.ANDROID){
+			float multiplierX = Gdx.graphics.getWidth()/1794f;
+			float multiplierY = Gdx.graphics.getHeight()/1080f;
+
+
+
+			for(int i=0;i<s.getButtonsCount();i++){
+				Button btn = s.getButton(i).getButton();
+				btn.setSize(btn.getWidth()*multiplierX* BUTTONS_K,btn.getHeight()*multiplierY*BUTTONS_K);
+				btn.setPosition(800*multiplierX,(360+i*90)*multiplierY);
+
+			}
+		}
 
 		s.commit();
+
+		s.getController().addListener(new ClickListener(){
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println(x+" "+y);
+				return true;
+			}
+		});
 
 		/*if(MainGame.platform==PlatformsVariants.ANDROID){
 			s.setButtonsPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
@@ -128,7 +153,7 @@ public class MenuScreen implements Screen {
 		//s.getController().act();
 		//s.resize(width, height);
 		//System.out.println(s.getController().getWidth());
-		if (MainGame.platform != PlatformsVariants.ANDROID) {
+		//if (MainGame.platform != PlatformsVariants.ANDROID) {
 
 			s.getController().getViewport().update(width, height, true);
 			int current_heigth = 600;
@@ -162,7 +187,7 @@ public class MenuScreen implements Screen {
 			anim.resize((int) (width * zooom + 5), (int) (height * zooom));
 			int x = (int) Math.floor(camera.position.x - camera.viewportWidth * zooom / 2);
 			anim.setStartX(x);
-		}
+		//}
 
 	}
 
